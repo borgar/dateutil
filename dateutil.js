@@ -17,19 +17,25 @@
   var day_names = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday'.split(' ');
 
   var method_map = {
+    'yr': 'FullYear',
     'year': 'FullYear',
     'years': 'FullYear',
+    'mn': 'Month',
     'month': 'Month',
     'months': 'Month',
     'day': 'Date',
     'days': 'Date',
     'date': 'Date',
+    'hr': 'Hours',
     'hour': 'Hours',
     'hours': 'Hours',
+    'min': 'Minutes',
     'minute': 'Minutes',
     'minutes': 'Minutes',
+    'sec': 'Seconds',
     'second': 'Seconds',
     'seconds': 'Seconds',
+    'ms': 'Milliseconds',
     'millisecond': 'Milliseconds',
     'milliseconds': 'Milliseconds',
   };
