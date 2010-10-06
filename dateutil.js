@@ -73,8 +73,7 @@
   
     // year + month + day
     date: {
-      // test: /^[+-]?\d{4,6}(?:(?:\-\d\d){1,2}|\d{4})$/,
-      test: /^[+-]?\d{4,6}(?:-\d\d-\d\d|\d\d\d\d)$/,
+      test: /^[+-]?\d{4,6}(?:-\d\d-\d\d|-?\d\d\d\d)$/,
       size: DAY_SIZE,
       parse: function ( str ) {
         var s = str.replace( /\D/g, '' );
