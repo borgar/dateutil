@@ -24,7 +24,7 @@ Function accepts a *Date* and returns the number of days in it's month.
 
 Function accepts a *Date* and returns a three value array containing the ISO 8901 year, week, and day (of the week), respectively.
 
-    dateutil.isocalendar( new Date(2010, 0, 3) ) == [2009,53,7]
+    dateutil.isocalendar( new Date(2010, 0, 3) ) == [2009, 53, 7]
 
 
 ### dateutil.set( date, values )
@@ -34,7 +34,7 @@ Function accepts a *Date* and an object of values. The function returns the inpu
     var mydate = new Date( 2000, 9, 16, 10, 45, 12 );
     dateutil.set( mydate, { hour: 0, minute: 0, second: 0 });
 
-    // result:  mydate == new Date( 2000, 9, 16, 0, 0, 0 );
+    result:  mydate == new Date( 2000, 9, 16, 0, 0, 0 );
 
 The function will accept all or any of these keys: 
 `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`. and their plural forms (`years`, `minutes`, etc. ); and these shorthand variations: `yr` (year), `mn` (month), `day` (day), `hr` (hour), `min` (minute), `sec` (second), `ms` (millisecond).
@@ -101,12 +101,11 @@ An contrived example:
 
     // usage:
     dateutil.parse('2002_31') == new Date(2002, 6, 30)
-    
 
 
 ### dateutil.format( date, format_string )
 
-Function accepts a *Date* and a *PHP* style [format string](1) and returns a formatted date. Refer to the [PHP docs](1) for the full spec.
+Function accepts a *Date* and a *PHP* style [format string][1] and returns a formatted date. Refer to the [PHP docs][1] for the full spec.
 
     var mydate = new Date( 2000, 9, 16, 10, 45, 12 );
     dateutil.format( mydate, 'jS F Y' ) == "16th October 2000"
@@ -125,7 +124,7 @@ And example that adds *Swatch internet time* formatter:
     
     // Swatch Internet time
     dateutil._formats['B'] = function (d) {
-      var mo = 0; // isDST*60 + timeZoneOffsetInMinutes
+      var mo = 0; // Should really be: isDST * 60 + timeZoneOffsetInMinutes
       return Math.round( ( d.getUTCHours() * 3600 + 
             ( ( d.getUTCMinutes() - mo + 60 ) * 60 ) +
               d.getUTCSeconds() ) * 1000 / 86400 ) % 1000;
