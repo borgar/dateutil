@@ -1,9 +1,12 @@
-/**
+/*
  *  Dateutil
  *  - provides formatting, parsing and other utility functions for dates.
  *
+ * Copyright (c) 2009 Borgar Þorsteinsson
+ * Licensed under the terms of the MIT (LICENSE.txt) software license.
+ *
  */
-(function(__global__){
+ (function(__global__){
 
   var SECOND_SIZE = 1000;
   var MINUTE_SIZE = SECOND_SIZE * 60;

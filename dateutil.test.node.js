@@ -3,8 +3,7 @@
  * running simple QUnit tests in Node.JS.
  *
  * Copyright (c) 2009 Borgar Þorsteinsson
- * Dual licensed under the MIT (MIT-LICENSE.txt)
- * and GPL (GPL-LICENSE.txt) licenses.
+ * Licensed under the terms of the MIT (LICENSE.txt) software license.
  *
  */
 
