@@ -286,21 +286,28 @@
 
 
   // parse a date
-  __global__.parse = function ( str, with_type ) {
+  __global__.parse = function ( str ) {
+    var d;
     if ( typeof str !== 'string' ) {
       throw new TypeError( "Datetime parser can't parse non-strings." );
     }
     for ( var dtype in date_parsers ) {
       if ( date_parsers[dtype].test( str ) ) {
-        if ( with_type ) {
-          return [ date_parsers[ dtype ].parse( str ), dtype ];
-        }
-        return date_parsers[ dtype ].parse( str );
+        d = date_parsers[ dtype ].parse( str );
+        d.type = dtype;
+        d.size = d.size || 0;
+        break;
       }
     }
-    // default parser supports rfc and a few more... OR returns "invalid date"
-    return with_type ? [new Date( str ), 'unknown_date'] : new Date( str );
+    // default parser supports RFC and a few more, or returns an "invalid date"
+    if ( !d ) {
+      d = new Date( str );
+      d.size = 0;
+      d.type = 'unknown_date';
+    }
+    return d;
   };
+
 
   // format a date to string
   __global__.format = function ( d, fmt ) {
@@ -311,7 +318,7 @@
       if ( c !== '\\' ) {
         r.push( (c in date_formatters) ? date_formatters[ c ]( d ) : c );
       }
-      // escpaed characters & unreconized characters
+      // escaped characters & unreconized characters
       else {
         c = i < fmt.length ? fmt.charAt( ++i ) : c;
         r.push( c );
