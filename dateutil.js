@@ -137,9 +137,8 @@
       size: DAY_SIZE,
       parse: function ( str ) {
         var d = new Date(0);
-        var b = str.split('-');
-        d.setUTCFullYear( parseInt( b[0], 10 ) );
-        d.setDate( parseInt( b[1], 10 ) );
+        d.setUTCFullYear( parseInt( str.substr(0,str.length-4), 10 ) );
+        d.setDate( parseInt( str.substr(str.length-3), 10 ) );
         d.size = DAY_SIZE;
         return d;
       }
