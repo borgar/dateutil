@@ -96,7 +96,7 @@
       parse: function ( str ) {
         var b = str.split( /[\/-]/ );
         d = new Date( parseInt( b[0], 10 ), parseInt( b[1], 10 ) - 1, 1 );
-        d.size = __global__.daysInMonth() * DAY_SIZE;
+        d.size = __global__.daysInMonth( d ) * DAY_SIZE;
         return d;
       }
     },
@@ -107,7 +107,7 @@
       size: YEAR_SIZE,
       parse: function ( str ) {
         var d = new Date( parseInt( str, 10 ), 0, 1 );
-        d.size = DAY_SIZE * ( d.isLeapYear() ? 366 : 365 ); 
+        d.size = DAY_SIZE * ( __global__.isLeapYear( d ) ? 366 : 365 ); 
         return d;
       }
     },
@@ -292,7 +292,7 @@
   __global__.parse = function ( str ) {
     var d;
     if ( typeof str !== 'string' ) {
-      throw new TypeError( "Datetime parser can't parse non-strings." );
+      throw new TypeError( "dateutil parser can't parse non-strings." );
     }
     for ( var dtype in date_parsers ) {
       if ( date_parsers[dtype].test( str ) ) {
