@@ -53,22 +53,24 @@
     // -- currently doesn't really support fractions on anything other than seconds >> FIXME
     // -- does not support timezones other than Zulu
     date_and_time: {
-      test: /^[+-]?\d{4,6}(?:(?:\-\d\d){1,2}|\d{4})[T ](?:\d\d)(?::?\d\d){0,2}(?:[\.,]\d+)?(?:Z|[+-]\d\d(:?\d\d))?$/,
+      test: /^[+-]?\d{4,6}(?:(?:\-\d\d){1,2}|\d{4})[T ](?:\d\d)(?::?\d\d){0,2}(?:[\.,]\d+)?(?:Z|[+-]\d\d(:?\d\d)?)?$/,
       size: 1,
       parse: function ( str ) {
         var b = str.split( /[T ]/ );
         var date = date_parsers.date.parse( b[0] );
         var m = b[1].replace( /:/g, '' )
-                      .match( /^(\d\d)(\d\d)?(\d\d)?(?:[.,](\d+))?(?:[+-](\d\d\d\d)?)?/ );
-        // TODO: -- I have no need for this feature yet:
+                      .match( /^(\d\d)(\d\d)?(\d\d)?(?:[.,](\d+))?([+-](?:\d\d){1,2})?/ );
+        // TODO: timezone (I have no need for this feature yet)
         // if ( m[5] ) { var zone = m[5] || '0000'; }
-        date.setTime(
-          date.getTime() + 
-          parseInt( m[1], 10 ) * HOUR_SIZE + 
-          parseInt( m[2] || '00', 10 ) * MINUTE_SIZE + 
-          parseInt( m[3] || '00', 10 ) * SECOND_SIZE + 
-          parseFloat( '0.' + m[4] || '0' ) * SECOND_SIZE
-        );
+        var fs = 0, t = date.getTime() + 
+                parseInt( m[1], 10 ) * HOUR_SIZE + 
+                parseInt( m[2] || '0', 10 ) * MINUTE_SIZE + 
+                parseInt( m[3] || '0', 10 ) * SECOND_SIZE;
+             if ( m[3] ) { fs = SECOND_SIZE; }
+        else if ( m[2] ) { fs = MINUTE_SIZE; }
+        else if ( m[1] ) { fs = HOUR_SIZE; }
+        t += parseFloat( '0.' + ( m[4] || '0' ) ) * fs;
+        date.setTime( t );
         date.size = 0;
         return date;
       }
