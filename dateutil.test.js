@@ -109,15 +109,82 @@ test("dateutil.set", function () {
 });
 
 
-test('dateutil.parse', function () {
-
-  // FIXME: test all parsers
-
-
-  ok( +(new Date(2005, 0, 1)) == +dateutil.parse('2005-01-01'), "2005-01-01" );
+test('dateutil.parse', function(){
   
-});
+  var corduroy_full = new Date(2011,10,11, 11,11,11, 111);
+  var corduroy_sec  = new Date(2011,10,11, 11,11,11);
+  var corduroy_mfrc = new Date(2011,10,11, 11,11,6, 660);
+  var corduroy_min  = new Date(2011,10,11, 11,11);
+  var corduroy_hfrc = new Date(2011,10,11, 11,6,39,600);
+  var corduroy_hour = new Date(2011,10,11, 11);
+  var corduroy_day  = new Date(2011,10,11);
+  var corduroy_mon  = new Date(2011,10,1);
+  var corduroy_year = new Date(2011,0,1);
 
+  // date_and_time
+  same( +dateutil.parse('2011-11-11T11:11:11.111Z'), +corduroy_full, "2011-11-11T11:11:11.111Z" );
+  same( +dateutil.parse('2011-11-11T11:11:11Z'), +corduroy_sec, "2011-11-11T11:11:11Z" );
+  same( +dateutil.parse('2011-11-11T11:11.111Z'), +corduroy_mfrc, "2011-11-11T11:11.111Z" );
+  same( +dateutil.parse('2011-11-11T11:11Z'), +corduroy_min, "2011-11-11T11:11Z" );
+  same( +dateutil.parse('2011-11-11T11.111Z'), +corduroy_hfrc, "2011-11-11T11.111Z" );
+  same( +dateutil.parse('2011-11-11T11Z'), +corduroy_hour, "2011-11-11T11Z" );
+
+  same( +dateutil.parse('2011-11-11T11:11:11.111'), +corduroy_full, "2011-11-11T11:11:11.111" );
+  same( +dateutil.parse('2011-11-11T11:11:11'), +corduroy_sec, "2011-11-11T11:11:11" );
+  same( +dateutil.parse('2011-11-11T11:11.111'), +corduroy_mfrc, "2011-11-11T11:11.111" );
+  same( +dateutil.parse('2011-11-11T11:11'), +corduroy_min, "2011-11-11T11:11" );
+  same( +dateutil.parse('2011-11-11T11.111'), +corduroy_hfrc, "2011-11-11T11.111" );
+  same( +dateutil.parse('2011-11-11T11'), +corduroy_hour, "2011-11-11T11" );
+
+  same( +dateutil.parse('2011-11-11T11:11:11.111+00:00'), +corduroy_full, "2011-11-11T11:11:11.111+00:00" );
+  same( +dateutil.parse('2011-11-11T11:11:11+00:00'), +corduroy_sec, "2011-11-11T11:11:11+00:00" );
+  same( +dateutil.parse('2011-11-11T11:11.111+00:00'), +corduroy_mfrc, "2011-11-11T11:11.111+00:00" );
+  same( +dateutil.parse('2011-11-11T11:11+00:00'), +corduroy_min, "2011-11-11T11:11+00:00" );
+  same( +dateutil.parse('2011-11-11T11.111+00:00'), +corduroy_hfrc, "2011-11-11T11.111+00:00" );
+  same( +dateutil.parse('2011-11-11T11+00:00'), +corduroy_hour, "2011-11-11T11+00:00" );
+
+  same( +dateutil.parse('2011-11-11T11:11:11.111+00'), +corduroy_full, "2011-11-11T11:11:11.111+00" );
+  same( +dateutil.parse('2011-11-11T11:11:11+00'), +corduroy_sec, "2011-11-11T11:11:11+00" );
+  same( +dateutil.parse('2011-11-11T11:11.111+00'), +corduroy_mfrc, "2011-11-11T11:11.111+00" );
+  same( +dateutil.parse('2011-11-11T11:11+00'), +corduroy_min, "2011-11-11T11:11+00" );
+  same( +dateutil.parse('2011-11-11T11.111+00'), +corduroy_hfrc, "2011-11-11T11.111+00" );
+  same( +dateutil.parse('2011-11-11T11+00'), +corduroy_hour, "2011-11-11T11+00" );
+
+  // date
+  same( +dateutil.parse('2011-11-11'), +corduroy_day, "2011-11-11" );
+  same( +dateutil.parse('2011-1111'), +corduroy_day, "2011-1111" );
+
+  // year_and_month
+  same( +dateutil.parse('2011-11'), +corduroy_mon, "2011-11" );
+  same( +dateutil.parse('2011/11'), +corduroy_mon, "2011/11" );
+  same( ''+dateutil.parse('2011-13'), 'Invalid Date', "2011-13" );  // should fail!
+
+  // year
+  same( +dateutil.parse('2011'), +corduroy_year, "2011" );
+  same( +dateutil.parse('12011'), +new Date(12011,0,1), "12011" );
+  same( +dateutil.parse('-12011'), +new Date(-12011,0,1), "-12011" );
+
+  // year_and_week
+  ok( +corduroy_day == +dateutil.parse('2011-W45-5'), "2011-W45-5" );
+  ok( +corduroy_day == +dateutil.parse('2011W45-5'), "2011W45-5" );
+  ok( +corduroy_day == +dateutil.parse('2011W455'), "2011W455" );
+  ok( +new Date(2011,10,7) == +dateutil.parse('2011-W45'), "2011-W45" );
+  ok( +new Date(2011,10,7) == +dateutil.parse('2011W45'), "2011W45" );
+
+  // year_and_ordinal
+  same( +dateutil.parse('-12011-314'), +new Date(-12011,0,314), "-12011-314" );
+  same( +dateutil.parse('2011-314'), +new Date(2011,0,314), "2011-314" );
+  same( ''+dateutil.parse('2011-500'), 'Invalid Date', "2011-500" ); // should fail!
+    
+  // year_and_quarter
+  var corduroy_q = new Date(2011,9,1);
+  ok( +dateutil.parse('-12011-Q4') == +new Date(-12011,9,1), "-12011-Q4" );
+  ok( +corduroy_q == +dateutil.parse('2011Q4'), "2011Q4" );
+  ok( +corduroy_q == +dateutil.parse('2011-Q4'), "2011-Q4" );
+  ok( +corduroy_q == +dateutil.parse('2011q4'), "2011q4" );
+  ok( +corduroy_q == +dateutil.parse('2011-q4'), "2011-q4" );
+
+});
 
 test("dateutil.parse: JSON style calendar dates", function () {
   for (var i=0,l=test_dates.length; i<l; i++) {
@@ -148,7 +215,6 @@ test("dateutil.parse: yyyy-Www-d", function () {
     }
   }
 });
-
 
 test("dateutil.format", function () {
 
