@@ -104,6 +104,31 @@ test("dateutil.set", function () {
   });
   ok( +bt == +dt, 'dateutil.set' );
 
+  // testing rollover mechanism
+  var d = dateutil.set(new Date( Date.UTC( 1999, 1, 20 ) ), {
+    'date': 30,
+    'month': 0
+  });
+  ok( +d === 917654400000, 'prevent rollovers: 1999-02-20 date,month' );
+
+  var d = dateutil.set(new Date( Date.UTC( 1999, 1, 20 ) ), {
+    'month': 0,
+    'date': 30
+  });
+  ok( +d === 917654400000, 'prevent rollovers: 1999-02-20 month,date' );
+
+  var d = dateutil.set(new Date( Date.UTC( 1600, 1, 29 ) ), {
+    'date': 30,
+    'month': 0
+  });
+  same( +d, -11673590400000, 'prevent rollovers: 1600-02-29 date,month' );
+
+  var d = dateutil.set(new Date( Date.UTC( 1600, 1, 29 ) ), {
+    'month': 0,
+    'date': 30
+  });
+  same( +d, -11673590400000, 'prevent rollovers: 1600-02-29 month,date' );
+  
 });
 
 
@@ -310,6 +335,13 @@ test("dateutil.format", function () {
   equals( dateutil.format( d, 'c'), '1961-01-03T01:51:10.001Z', 'format: c' );
   equals( dateutil.format( d, 'r'), 'Tue, 03 Jan 1961 01:51:10 +0000', 'format: r' );
   equals( dateutil.format( d, 'U'), '-283817329', 'format: U' );
+
+  // allow transfering to prototype
+  Date.prototype.format = dateutil.format;
+  var d = new Date( Date.UTC(1975, 9, 16) );
+  equals( d.format('Y-m-d'), "1975-10-16", 'format prototype assignment' );
+  try {  delete Date.prototype.format; }
+  catch (err) {}
 
 });
 
