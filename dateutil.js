@@ -6,7 +6,7 @@
  * Licensed under the terms of the MIT (LICENSE.txt) software license.
  *
  */
-/*jslint laxbreak: true *//*global module */
+/*jslint laxbreak: true, undef: true *//*global module */
 (function(__global__){
 
   var SECOND_SIZE = 1000;
@@ -82,11 +82,12 @@
       test: /^[+\-]?\d{4,6}(?:\-\d\d\-\d\d|-?\d\d\d\d)$/,
       size: DAY_SIZE,
       parse: function ( str ) {
-        var s = str.replace( /\D/g, '' );
-        var d = parseInt( s.substr( s.length -2 ), 10 );
-        var m = parseInt( s.substr( s.length -4, 2 ), 10 );
-        var y = parseInt( s.substring( 0, s.length -4 ), 10 );
-        d = new Date( y, m - 1, d );
+        var s = str.replace( /\D/g, '' ),
+            d = __global__.date(
+              s.substring( 0, s.length -4 ),
+             +s.substr( s.length -4, 2 ) - 1,
+              s.substr( s.length -2 )
+            );
         d.size = DAY_SIZE;
         return d;
       }
@@ -98,7 +99,7 @@
       size: MONTH_SIZE,
       parse: function ( str ) {
         var b = str.split( /[\/\-]/ );
-        var d = new Date( parseInt( b[0], 10 ), parseInt( b[1], 10 ) - 1, 1 );
+        var d = __global__.date( b[0], +b[1] - 1, 1 );
         d.size = __global__.daysInMonth( d ) * DAY_SIZE;
         return d;
       }
@@ -109,7 +110,7 @@
       test: /^[+\-]?\d{4,6}$/,
       size: YEAR_SIZE,
       parse: function ( str ) {
-        var d = new Date( parseInt( str, 10 ), 0, 1 );
+        var d = __global__.date( str, 0, 1 );
         d.size = DAY_SIZE * ( __global__.isLeapYear( d ) ? 366 : 365 ); 
         return d;
       }
@@ -121,7 +122,7 @@
       size: WEEK_SIZE,
       parse: function ( str ) {
         var s = str.toLowerCase().replace( /[^w\d]/g, '' ).split('w');
-        var d = new Date( parseInt( s[0], 10 ), 0, 3 );  // Jan 3
+        var d = __global__.date( s[0], 0, 3 );  // Jan 3
         d.setUTCDate( 3 - d.getUTCDay() + 
                       ( parseInt( s[1].substr( 0, 2 ), 10 ) - 1 ) * 7 + 
                       parseInt( s[1].substr( 2, 1 ) || '1', 10 ) );
@@ -150,10 +151,8 @@
       test: /^[+\-]?\d{4,6}\-?[Qq][1-4]$/,
       size: YEAR_SIZE / 4,
       parse: function ( str ) {
-        var d = new Date(0);
-        var b = str.split(/\-?[Qq]/);
-        d.setUTCFullYear( parseInt( b[0], 10 ) );
-        d.setUTCMonth( ( parseInt( b[1], 10 ) - 1 ) * 3 );
+        var b = str.split(/\-?[Qq]/),
+            d = __global__.date( b[0], ( parseInt( b[1], 10 ) - 1 ) * 3 );
         d.size = DAY_SIZE;
         return d;
       }
@@ -215,9 +214,9 @@
     // English ordinal suffix for the day of the month, 2 characters
     S: function (d) {
       var a = d.getUTCDate() % 10, b = d.getUTCDate() % 100;
-      return (a == 1) && (b !== 11) && 'st' ||
-             (a == 2) && (b !== 12) && 'nd' ||
-             (a == 3) && (b !== 13) && 'rd' || 'th';
+      return (a === 1) && (b !== 11) && 'st' ||
+             (a === 2) && (b !== 12) && 'nd' ||
+             (a === 3) && (b !== 13) && 'rd' || 'th';
     },
     // Number of days in the given month
     t: function (d) { return __global__.daysInMonth( d ); },
@@ -236,25 +235,32 @@
     // A full numeric representation of a year, 4 digits
     Y: function (d) { return d.getUTCFullYear(); },
     // The day of the year (starting from 0)
-    z: function (d) { return Math.floor( ( d - (new Date(d.getUTCFullYear(), 0, 1)) ) / DAY_SIZE ); }
+    z: function (d) { return Math.floor( ( d - (new Date(Date.UTC(d.getUTCFullYear(), 0, 1))) ) / DAY_SIZE ); }
   };
 
   // **************************************
   // *** *** *** module methods *** *** ***
   // **************************************
 
+  __global__.date = function ( y, m, d, h, n, s, ms ) {
+    var ts = ( !arguments.length ) ? __global__.now() 
+        : Date.UTC( parseInt( y, 10 ), parseInt( m||0, 10 ), parseInt( d||1, 10 ),
+                    parseInt( h||0, 10 ), parseInt( n||0, 10 ), parseInt( s||0, 10 ),
+                    parseInt( ms||0, 10 ) );
+      return new Date( ts );
+  };
+
+
   // zero pad a string n to l places
   __global__.pad = function ( n, l ) {
     var s =  __global__.pad.z;
-    if ( !s ) {
-      // This mess is here because JSlint breaks on new Array(999)
+    if ( !s ) { // This mess is here because JSlint breaks on new Array(999)
       var a = []; a[999] = '';
       s = __global__.pad.z = a.join('0');
     }
     s += n;
     return s.substring( s.length -( l || 2 ) );
   };
-
 
   // is a given year a leap year
   __global__.isLeapYear = function ( y ) {
@@ -265,7 +271,11 @@
 
   // return the number of days in a date's month
   __global__.daysInMonth = function ( dt ) {
-    return 32 - new Date( dt.getUTCFullYear(), dt.getUTCMonth(), 32 ).getUTCDate();
+    var m = dt.getUTCMonth();
+    if ( m === 1 ) {
+      return __global__.isLeapYear( dt ) ? 29 : 28;
+    }
+    return [ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 ][ m ];
   };
 
 
@@ -275,7 +285,7 @@
     var t = new Date( dt.valueOf() );
     t.setDate( t.getDate() - ((d + 6) % 7) + 3 );
     var iso_year = t.getUTCFullYear();
-    var w = Math.floor( (t.getTime() - new Date(iso_year, 0, 1, -6)) / 86400000 );
+    var w = Math.floor( (t.getTime() - __global__.date(iso_year, 0, 1, -6)) / 86400000 );
     return [ iso_year, 1+Math.floor(w/7), d||7 ];
   };
 
@@ -298,10 +308,10 @@
   __global__.parse = function ( str ) {
     var d;
     if ( typeof str !== 'string' ) {
-      throw new TypeError( "dateutil parser can't parse non-strings." );
+      throw new Error( "dateutil parser can't parse non-strings." );
     }
     for ( var dtype in date_parsers ) {
-      if ( date_parsers[dtype].test( str ) ) {
+      if ( date_parsers[dtype].test.test( str ) ) {
         d = date_parsers[ dtype ].parse( str );
         d.type = dtype;
         d.size = d.size || 0;
@@ -320,7 +330,13 @@
 
   // format a date to string
   __global__.format = function ( d, fmt ) {
-    d = d || new Date();
+    if ( arguments.length === 1 && this instanceof Date ) {
+      fmt = d;
+      d = this;
+    }
+    else if ( !(d instanceof Date) ) {
+      throw new Error('No date passed to format.');
+    }
     for ( var r=[], c, l=fmt.length, i=0; i<l; i++ ) {
       c = fmt.charAt( i );
       // format characters
@@ -339,14 +355,14 @@
 
   // return a Date object for the current date (0 time)
   __global__.today = function () {
-    return __global__.set( new Date(), {
+    return __global__.set( __global__.date(), {
       hour: 0, minute: 0, second: 0, millisecond: 0
     });
   };
 
 
   // return timestamp for the moment
-  __global__.now = (typeof Date.now === 'function') 
+  __global__.now = ( typeof Date.now === 'function' )
             ? Date.now 
             : function () { return +new Date(); };
 
@@ -354,8 +370,8 @@
   // translation hook
   __global__._ = function ( s ) { return s; };
 
-})(
+}(
   (typeof module !== 'undefined' && module.exports) 
     ? module.exports 
     : (this.dateutil = {}) 
-);
+));

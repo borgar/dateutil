@@ -32,60 +32,58 @@ test("dateutil.daysInMonth", function () {
   // expect( 10 );
   ok( typeof dateutil.daysInMonth === 'function', 'dateutil.daysInMonth() is a function' );
   
-  ok( dateutil.daysInMonth(new Date( 1999, 0,1 )) == 31, 'dateutil.daysInMonth( Jan. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 1,1 )) == 28, 'dateutil.daysInMonth( Feb. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 2,1 )) == 31, 'dateutil.daysInMonth( Mar. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 3,1 )) == 30, 'dateutil.daysInMonth( Apr. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 4,1 )) == 31, 'dateutil.daysInMonth( May. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 5,1 )) == 30, 'dateutil.daysInMonth( Jun. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 6,1 )) == 31, 'dateutil.daysInMonth( Jul. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 7,1 )) == 31, 'dateutil.daysInMonth( Aug. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 8,1 )) == 30, 'dateutil.daysInMonth( Sep. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999, 9,1 )) == 31, 'dateutil.daysInMonth( Oct. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999,10,1 )) == 30, 'dateutil.daysInMonth( Nov. 1999 )' )
-  ok( dateutil.daysInMonth(new Date( 1999,11,1 )) == 31, 'dateutil.daysInMonth( Dec. 1999 )' )
-  
-  ok( dateutil.daysInMonth(new Date( 1920, 0,1 )) == 31, 'dateutil.daysInMonth( Jan. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 1,1 )) == 29, 'dateutil.daysInMonth( Feb. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 2,1 )) == 31, 'dateutil.daysInMonth( Mar. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 3,1 )) == 30, 'dateutil.daysInMonth( Apr. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 4,1 )) == 31, 'dateutil.daysInMonth( May. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 5,1 )) == 30, 'dateutil.daysInMonth( Jun. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 6,1 )) == 31, 'dateutil.daysInMonth( Jul. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 7,1 )) == 31, 'dateutil.daysInMonth( Aug. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 8,1 )) == 30, 'dateutil.daysInMonth( Sep. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920, 9,1 )) == 31, 'dateutil.daysInMonth( Oct. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920,10,1 )) == 30, 'dateutil.daysInMonth( Nov. 1920 )' )
-  ok( dateutil.daysInMonth(new Date( 1920,11,1 )) == 31, 'dateutil.daysInMonth( Dec. 1920 )' )
-  
-  ok( dateutil.daysInMonth(new Date( 2100, 1,1 )) == 28, 'dateutil.daysInMonth( Feb. 2100 )' )
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 0,1) )), 31, 'dateutil.daysInMonth( Jan. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 1,1) )), 28, 'dateutil.daysInMonth( Feb. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 2,1) )), 31, 'dateutil.daysInMonth( Mar. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 3,1) )), 30, 'dateutil.daysInMonth( Apr. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 4,1) )), 31, 'dateutil.daysInMonth( May. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 5,1) )), 30, 'dateutil.daysInMonth( Jun. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 6,1) )), 31, 'dateutil.daysInMonth( Jul. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 7,1) )), 31, 'dateutil.daysInMonth( Aug. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 8,1) )), 30, 'dateutil.daysInMonth( Sep. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999, 9,1) )), 31, 'dateutil.daysInMonth( Oct. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999,10,1) )), 30, 'dateutil.daysInMonth( Nov. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1999,11,1) )), 31, 'dateutil.daysInMonth( Dec. 1999 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 0,1) )), 31, 'dateutil.daysInMonth( Jan. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 1,1) )), 29, 'dateutil.daysInMonth( Feb. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 2,1) )), 31, 'dateutil.daysInMonth( Mar. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 3,1) )), 30, 'dateutil.daysInMonth( Apr. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 4,1) )), 31, 'dateutil.daysInMonth( May. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 5,1) )), 30, 'dateutil.daysInMonth( Jun. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 6,1) )), 31, 'dateutil.daysInMonth( Jul. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 7,1) )), 31, 'dateutil.daysInMonth( Aug. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 8,1) )), 30, 'dateutil.daysInMonth( Sep. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920, 9,1) )), 31, 'dateutil.daysInMonth( Oct. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920,10,1) )), 30, 'dateutil.daysInMonth( Nov. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(1920,11,1) )), 31, 'dateutil.daysInMonth( Dec. 1920 )' );
+  same( dateutil.daysInMonth(new Date( Date.UTC(2100, 1,1) )), 28, 'dateutil.daysInMonth( Feb. 2100 )' );
   
 });
 
 
 test('dateutil.isocalendar', function () {
 
-  same( dateutil.isocalendar(new Date(2005, 0, 1)), [2004,53,6], "2004-W53-6" );
-  same( dateutil.isocalendar(new Date(2005, 0, 2)), [2004,53,7], "2004-W53-7" );
-  same( dateutil.isocalendar(new Date(2005,11,31)), [2005,52,6], "2005-W52-6" );
-  same( dateutil.isocalendar(new Date(2007, 0, 1)), [2007, 1,1], "2007-W01-1" );
-  same( dateutil.isocalendar(new Date(2007,11,30)), [2007,52,7], "2007-W52-7" );
-  same( dateutil.isocalendar(new Date(2007,11,31)), [2008, 1,1], "2008-W01-1" );
-  same( dateutil.isocalendar(new Date(2008, 0, 1)), [2008, 1,2], "2008-W01-2" );
-  same( dateutil.isocalendar(new Date(2008,11,29)), [2009, 1,1], "2009-W01-1" );
-  same( dateutil.isocalendar(new Date(2008,11,31)), [2009, 1,3], "2009-W01-3" );
-  same( dateutil.isocalendar(new Date(2009, 0, 1)), [2009, 1,4], "2009-W01-4" );
-  same( dateutil.isocalendar(new Date(2009,11,31)), [2009,53,4], "2009-W53-4" );
-  same( dateutil.isocalendar(new Date(2010, 0, 3)), [2009,53,7], "2009-W53-7" );
-  same( dateutil.isocalendar(new Date(2009,11,31)), [2009,53,4], "2009-W53-4" );
-  same( dateutil.isocalendar(new Date(2010, 0, 1)), [2009,53,5], "2009-W53-5" );
-  same( dateutil.isocalendar(new Date(2010, 0, 2)), [2009,53,6], "2009-W53-6" );
-  same( dateutil.isocalendar(new Date(2010, 0, 3)), [2009,53,7], "2009-W53-7" );
-  same( dateutil.isocalendar(new Date(2008,11,28)), [2008,52,7], "2008-W52-7" );
-  same( dateutil.isocalendar(new Date(2008,11,29)), [2009, 1,1], "2009-W01-1" );
-  same( dateutil.isocalendar(new Date(2008,11,30)), [2009, 1,2], "2009-W01-2" );
-  same( dateutil.isocalendar(new Date(2008,11,31)), [2009, 1,3], "2009-W01-3" );
-  same( dateutil.isocalendar(new Date(2009, 0, 1)), [2009, 1,4], "2009-W01-4" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2005, 0, 1))), [2004,53,6], "2004-W53-6" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2005, 0, 2))), [2004,53,7], "2004-W53-7" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2005,11,31))), [2005,52,6], "2005-W52-6" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2007, 0, 1))), [2007, 1,1], "2007-W01-1" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2007,11,30))), [2007,52,7], "2007-W52-7" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2007,11,31))), [2008, 1,1], "2008-W01-1" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2008, 0, 1))), [2008, 1,2], "2008-W01-2" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2008,11,29))), [2009, 1,1], "2009-W01-1" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2008,11,31))), [2009, 1,3], "2009-W01-3" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2009, 0, 1))), [2009, 1,4], "2009-W01-4" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2009,11,31))), [2009,53,4], "2009-W53-4" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2010, 0, 3))), [2009,53,7], "2009-W53-7" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2009,11,31))), [2009,53,4], "2009-W53-4" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2010, 0, 1))), [2009,53,5], "2009-W53-5" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2010, 0, 2))), [2009,53,6], "2009-W53-6" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2010, 0, 3))), [2009,53,7], "2009-W53-7" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2008,11,28))), [2008,52,7], "2008-W52-7" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2008,11,29))), [2009, 1,1], "2009-W01-1" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2008,11,30))), [2009, 1,2], "2009-W01-2" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2008,11,31))), [2009, 1,3], "2009-W01-3" );
+  same( dateutil.isocalendar(new Date(Date.UTC(2009, 0, 1))), [2009, 1,4], "2009-W01-4" );
   
 });
 
@@ -94,7 +92,7 @@ test("dateutil.set", function () {
   // expect( 10 );
   ok( typeof dateutil.set === 'function', 'dateutil.set() is a function' );
 
-  var dt = new Date(1975,9,16,10,24,12,50);
+  var dt = new Date(Date.UTC(1975,9,16,10,24,12,50));
   var bt = dateutil.set(new Date(0), {
     year: 1975,
     month: 9,
@@ -111,15 +109,16 @@ test("dateutil.set", function () {
 
 test('dateutil.parse', function(){
   
-  var corduroy_full = new Date(2011,10,11, 11,11,11, 111);
-  var corduroy_sec  = new Date(2011,10,11, 11,11,11);
-  var corduroy_mfrc = new Date(2011,10,11, 11,11,6, 660);
-  var corduroy_min  = new Date(2011,10,11, 11,11);
-  var corduroy_hfrc = new Date(2011,10,11, 11,6,39,600);
-  var corduroy_hour = new Date(2011,10,11, 11);
-  var corduroy_day  = new Date(2011,10,11);
-  var corduroy_mon  = new Date(2011,10,1);
-  var corduroy_year = new Date(2011,0,1);
+  var corduroy_full = new Date(Date.UTC(2011,10,11, 11,11,11, 111));
+  var corduroy_sec  = new Date(Date.UTC(2011,10,11, 11,11,11));
+  var corduroy_mfrc = new Date(Date.UTC(2011,10,11, 11,11,6, 660));
+  var corduroy_min  = new Date(Date.UTC(2011,10,11, 11,11));
+  var corduroy_hfrc = new Date(Date.UTC(2011,10,11, 11,6,39,600));
+  var corduroy_hour = new Date(Date.UTC(2011,10,11, 11));
+  var corduroy_day  = new Date(Date.UTC(2011,10,11));
+  var corduroy_mon  = new Date(Date.UTC(2011,10,1));
+  var corduroy_year = new Date(Date.UTC(2011,0,1));
+  var INVALID = new Date('borked')+'';
 
   // date_and_time
   same( +dateutil.parse('2011-11-11T11:11:11.111Z'), +corduroy_full, "2011-11-11T11:11:11.111Z" );
@@ -157,34 +156,35 @@ test('dateutil.parse', function(){
   // year_and_month
   same( +dateutil.parse('2011-11'), +corduroy_mon, "2011-11" );
   same( +dateutil.parse('2011/11'), +corduroy_mon, "2011/11" );
-  same( ''+dateutil.parse('2011-13'), 'Invalid Date', "2011-13" );  // should fail!
+  same( ''+dateutil.parse('2011-13'), INVALID, "2011-13" );  // should fail!
 
   // year
   same( +dateutil.parse('2011'), +corduroy_year, "2011" );
-  same( +dateutil.parse('12011'), +new Date(12011,0,1), "12011" );
-  same( +dateutil.parse('-12011'), +new Date(-12011,0,1), "-12011" );
+  same( +dateutil.parse('12011'), +new Date(Date.UTC(12011,0,1)), "12011" );
+  same( +dateutil.parse('-12011'), +new Date(Date.UTC(-12011,0,1)), "-12011" );
 
   // year_and_week
   ok( +corduroy_day == +dateutil.parse('2011-W45-5'), "2011-W45-5" );
   ok( +corduroy_day == +dateutil.parse('2011W45-5'), "2011W45-5" );
   ok( +corduroy_day == +dateutil.parse('2011W455'), "2011W455" );
-  ok( +new Date(2011,10,7) == +dateutil.parse('2011-W45'), "2011-W45" );
-  ok( +new Date(2011,10,7) == +dateutil.parse('2011W45'), "2011W45" );
+  ok( +new Date(Date.UTC(2011,10,7)) == +dateutil.parse('2011-W45'), "2011-W45" );
+  ok( +new Date(Date.UTC(2011,10,7)) == +dateutil.parse('2011W45'), "2011W45" );
 
   // year_and_ordinal
-  same( +dateutil.parse('-12011-314'), +new Date(-12011,0,314), "-12011-314" );
-  same( +dateutil.parse('2011-314'), +new Date(2011,0,314), "2011-314" );
-  same( ''+dateutil.parse('2011-500'), 'Invalid Date', "2011-500" ); // should fail!
+  same( +dateutil.parse('-12011-314'), +new Date( Date.UTC( -12011,0,314 ) ), "-12011-314" );
+  same( +dateutil.parse('2011-314'), +new Date( Date.UTC( 2011,0,314 ) ), "2011-314" );
+  same( ''+dateutil.parse('2011-500'), INVALID, "2011-500" ); // should fail!
     
   // year_and_quarter
-  var corduroy_q = new Date(2011,9,1);
-  ok( +dateutil.parse('-12011-Q4') == +new Date(-12011,9,1), "-12011-Q4" );
+  var corduroy_q = new Date( Date.UTC( 2011,9,1 ) );
+  ok( +dateutil.parse('-12011-Q4') == +new Date(Date.UTC(-12011,9,1)), "-12011-Q4" );
   ok( +corduroy_q == +dateutil.parse('2011Q4'), "2011Q4" );
   ok( +corduroy_q == +dateutil.parse('2011-Q4'), "2011-Q4" );
   ok( +corduroy_q == +dateutil.parse('2011q4'), "2011q4" );
   ok( +corduroy_q == +dateutil.parse('2011-q4'), "2011-q4" );
 
 });
+
 
 test("dateutil.parse: JSON style calendar dates", function () {
   for (var i=0,l=test_dates.length; i<l; i++) {
@@ -216,12 +216,13 @@ test("dateutil.parse: yyyy-Www-d", function () {
   }
 });
 
+
 test("dateutil.format", function () {
 
   // expect( 10 );
   ok( typeof dateutil.format === 'function', 'dateutil.format() is a function' );
 
-  var d = new Date( 2001, 2, 10, 17, 16, 18, 13 );
+  var d = new Date( Date.UTC( 2001, 2, 10, 17, 16, 18, 13 ) );
   same( dateutil.format( d, "F j, Y, g:i a"), "March 10, 2001, 5:16 pm",  "F j, Y, g:i a" );
   same( dateutil.format( d, "m.d.y"), "03.10.01",  "m.d.y" );
   same( dateutil.format( d, "j, n, Y"), "10, 3, 2001",  "j, n, Y" );
@@ -232,7 +233,7 @@ test("dateutil.format", function () {
   same( dateutil.format( d, 'H:m:s \\m \\i\\s\\ \\m\\o\\n\\t\\h'), "17:03:18 m is month",  "H:m:s \\m \\i\\s\\ \\m\\o\\n\\t\\h" );
   same( dateutil.format( d, "H:i:s"), "17:16:18",  "Format: 17:16:18" );
 
-  var d = new Date( 2006, 7, 10, 15, 5, 8, 123 );
+  var d = new Date( Date.UTC( 2006, 7, 10, 15, 5, 8, 123 ) );
   equals( dateutil.format( d, 'd'), '10', 'format: d' );
   equals( dateutil.format( d, 'D'), 'Thu', 'format: D' );
   equals( dateutil.format( d, 'j'), '10', 'format: j' );
@@ -271,7 +272,7 @@ test("dateutil.format", function () {
   equals( dateutil.format( d, 'r'), 'Thu, 10 Aug 2006 15:05:08 +0000', 'format: r' );
   equals( dateutil.format( d, 'U'), '1155222308', 'format: U' );
 
-  var d = new Date( 1961, 0, 3, 1, 51, 10, 1 );
+  var d = new Date( Date.UTC( 1961, 0, 3, 1, 51, 10, 1 ) );
   equals( dateutil.format( d, 'd'), '03', 'format: d' );
   equals( dateutil.format( d, 'D'), 'Tue', 'format: D' );
   equals( dateutil.format( d, 'j'), '3', 'format: j' );
@@ -319,7 +320,7 @@ test("dateutil.today", function () {
   ok( typeof dateutil.today === 'function', 'dateutil.today() is a function' );
 
   var d = new Date();
-  var today = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
+  var today = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
 
   same( +dateutil.today(), +today, 'dateutil.today()' );
   same( +dateutil.today(), +dateutil.set(new Date, { hour:0, minute:0, second:0, millisecond:0 }), 'dateutil.today() vs. dateutil.set()' );
@@ -335,5 +336,4 @@ test("dateutil.now", function () {
   same( +d, +now, 'dateutil.now()' );
 
 });
-
 
