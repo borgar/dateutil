@@ -19,7 +19,11 @@
 
   var month_names = 'January February March April May June July August September October November December'.split(' ');
   var day_names = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday'.split(' ');
-
+  
+  var method_size = {
+     'FullYear': 6, 'Month': 5, 'Date': 4, 'Hours': 3, 
+     'Minutes': 2, 'Seconds': 1, 'Milliseconds': 0
+  };
   var method_map = {
     'yr': 'FullYear',
     'year': 'FullYear',
@@ -244,7 +248,7 @@
 
   __global__.date = function ( y, m, d, h, n, s, ms ) {
     var ts = ( !arguments.length ) ? __global__.now() 
-        : Date.UTC( parseInt( y, 10 ), parseInt( m||0, 10 ), parseInt( d||1, 10 ),
+        : Date.UTC( parseInt( y||0, 10 ), parseInt( m||0, 10 ), parseInt( d||1, 10 ),
                     parseInt( h||0, 10 ), parseInt( n||0, 10 ), parseInt( s||0, 10 ),
                     parseInt( ms||0, 10 ) );
       return new Date( ts );
@@ -294,10 +298,23 @@
   // `mydate.set({ hour: 8, minute: 12, second: 0 });`
   __global__.set = function ( dt, values ) {
     if ( typeof values === 'object' ) {
+      var s = [], n, i;
+      // step 1: collect a list of values to modify
       for ( var key in values ) {
         if ( key in method_map ) {
-          dt[ 'setUTC' + method_map[ key ] ]( values[ key ] );
+          n = method_map[ key ];
+          s.push( [ values[ key ], n, method_size[ n ] ] );
         }
+      }
+      // step 2: order values by size
+      s = s.sort(function ( a, b ) { return a[2] - b[2]; });
+      // step 3: little endian value zeroing
+      for (i=0; i<s.length; i++) {
+        dt[ 'setUTC' + s[i][1] ]( s[i][1] === 'Date' ? 1 : 0 );
+      }
+      // step 4: big endian value setting
+      for (i=s.length; i--; ) {
+        dt[ 'setUTC' + s[i][1] ]( s[i][0] );
       }
     }
     return dt;
