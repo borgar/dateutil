@@ -97,7 +97,7 @@
       size: MONTH_SIZE,
       parse: function ( str ) {
         var b = str.split( /[\/-]/ );
-        d = new Date( parseInt( b[0], 10 ), parseInt( b[1], 10 ) - 1, 1 );
+        var d = new Date( parseInt( b[0], 10 ), parseInt( b[1], 10 ) - 1, 1 );
         d.size = __global__.daysInMonth( d ) * DAY_SIZE;
         return d;
       }
