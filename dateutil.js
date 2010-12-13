@@ -6,7 +6,8 @@
  * Licensed under the terms of the MIT (LICENSE.txt) software license.
  *
  */
- (function(__global__){
+/*jslint laxbreak: true *//*global module */
+(function(__global__){
 
   var SECOND_SIZE = 1000;
   var MINUTE_SIZE = SECOND_SIZE * 60;
@@ -40,7 +41,7 @@
     'seconds': 'Seconds',
     'ms': 'Milliseconds',
     'millisecond': 'Milliseconds',
-    'milliseconds': 'Milliseconds',
+    'milliseconds': 'Milliseconds'
   };
 
   // *****************************************
@@ -53,13 +54,13 @@
     // -- currently doesn't really support fractions on anything other than seconds >> FIXME
     // -- does not support timezones other than Zulu
     date_and_time: {
-      test: /^[+-]?\d{4,6}(?:(?:\-\d\d){1,2}|\d{4})[T ](?:\d\d)(?::?\d\d){0,2}(?:[\.,]\d+)?(?:Z|[+-]\d\d(:?\d\d)?)?$/,
+      test: /^[+\-]?\d{4,6}(?:(?:\-\d\d){1,2}|\d{4})[T ](?:\d\d)(?::?\d\d){0,2}(?:[\.,]\d+)?(?:Z|[+\-]\d\d(:?\d\d)?)?$/,
       size: 1,
       parse: function ( str ) {
         var b = str.split( /[T ]/ );
         var date = date_parsers.date.parse( b[0] );
         var m = b[1].replace( /:/g, '' )
-                      .match( /^(\d\d)(\d\d)?(\d\d)?(?:[.,](\d+))?([+-](?:\d\d){1,2})?/ );
+                      .match( /^(\d\d)(\d\d)?(\d\d)?(?:[.,](\d+))?([+\-](?:\d\d){1,2})?/ );
         // TODO: timezone (I have no need for this feature yet)
         // if ( m[5] ) { var zone = m[5] || '0000'; }
         var fs = 0, t = date.getTime() + 
@@ -78,7 +79,7 @@
   
     // year + month + day
     date: {
-      test: /^[+-]?\d{4,6}(?:-\d\d-\d\d|-?\d\d\d\d)$/,
+      test: /^[+\-]?\d{4,6}(?:\-\d\d\-\d\d|-?\d\d\d\d)$/,
       size: DAY_SIZE,
       parse: function ( str ) {
         var s = str.replace( /\D/g, '' );
@@ -93,10 +94,10 @@
 
     // year + month
     year_and_month: {
-      test: /^[+-]?\d{4,6}[\/-](?:0[1-9]|1[012])$/,
+      test: /^[+\-]?\d{4,6}[\/\-](?:0[1-9]|1[012])$/,
       size: MONTH_SIZE,
       parse: function ( str ) {
-        var b = str.split( /[\/-]/ );
+        var b = str.split( /[\/\-]/ );
         var d = new Date( parseInt( b[0], 10 ), parseInt( b[1], 10 ) - 1, 1 );
         d.size = __global__.daysInMonth( d ) * DAY_SIZE;
         return d;
@@ -105,7 +106,7 @@
 
     // year
     year: {
-      test: /^[+-]?\d{4,6}$/,
+      test: /^[+\-]?\d{4,6}$/,
       size: YEAR_SIZE,
       parse: function ( str ) {
         var d = new Date( parseInt( str, 10 ), 0, 1 );
@@ -116,7 +117,7 @@
 
     // year + iso week + [day]
     year_and_week: {
-      test: /^[+-]?\d{4,6}\-?[Ww]\d\d(?:\-?\d)?$/,
+      test: /^[+\-]?\d{4,6}\-?[Ww]\d\d(?:\-?\d)?$/,
       size: WEEK_SIZE,
       parse: function ( str ) {
         var s = str.toLowerCase().replace( /[^w\d]/g, '' ).split('w');
@@ -133,7 +134,7 @@
     // -- we don't allow the short form yyyyddd because of ambiguity with yyyymmdd
     // -- 5 letter years would clash with cal-dates: yyyyyddd ~ yyyymmdd
     year_and_ordinal: {
-      test: /^[+-]?\d{4,6}\-[0-3]\d\d$/,
+      test: /^[+\-]?\d{4,6}\-[0-3]\d\d$/,
       size: DAY_SIZE,
       parse: function ( str ) {
         var d = new Date(0);
@@ -146,7 +147,7 @@
 
     // year + quarter
     year_and_quarter: {
-      test: /^[+-]?\d{4,6}\-?[Qq][1-4]$/,
+      test: /^[+\-]?\d{4,6}\-?[Qq][1-4]$/,
       size: YEAR_SIZE / 4,
       parse: function ( str ) {
         var d = new Date(0);
@@ -168,7 +169,7 @@
     // ISO 8601 date
     c: function (d) { return __global__.format( d, 'Y-m-d\\TH:i:s.' ) + this.u(d,3) + 'Z'; },
     // Day of the month, 2 digits with leading zeros
-    d: function (d) { return pad( d.getUTCDate() ); },
+    d: function (d) { return __global__.pad( d.getUTCDate() ); },
     // A textual representation of a day, three letters
     D: function (d) { return __global__._( day_names[ d.getUTCDay() ].substr( 0, 3 ) ); },
     // Time zone identifier
@@ -180,11 +181,11 @@
     // 24-hour format of an hour without leading zeros
     G: function (d) { return d.getUTCHours(); },
     // 12-hour format of an hour with leading zeros
-    h: function (d) { return pad( d.getUTCHours() % 12 || 12 ); },
+    h: function (d) { return __global__.pad( d.getUTCHours() % 12 || 12 ); },
     // 24-hour format of an hour with leading zeros
-    H: function (d) { return pad( d.getUTCHours() ); },
+    H: function (d) { return __global__.pad( d.getUTCHours() ); },
     // Minutes with leading zeros
-    i: function (d) { return pad( d.getUTCMinutes() ); },
+    i: function (d) { return __global__.pad( d.getUTCMinutes() ); },
     // Day of the month without leading zeros
     j: function (d) { return d.getUTCDate(); },
     // A full textual representation of the day of the week
@@ -192,7 +193,7 @@
     // Whether it's a leap year (0 = yes, 1 = no)
     L: function (d) { return __global__.isLeapYear( d ) * 1; },
     // Numeric representation of a month, with leading zeros
-    m: function (d) { return pad( d.getUTCMonth() + 1 ); },
+    m: function (d) { return __global__.pad( d.getUTCMonth() + 1 ); },
     // A short textual representation of a month, three letters
     M: function (d) { return __global__._( month_names[ d.getUTCMonth() ].substr( 0, 3 ) ); },
     // Numeric representation of a month, without leading zeros
@@ -200,7 +201,7 @@
     // ISO-8601 numeric representation of the day of the week
     N: function (d) { return d.getUTCDay() || 7; },
     // ISO-8601 year number
-    o: function (d) { return pad( __global__.isocalendar(d)[0], 4 ); },
+    o: function (d) { return __global__.pad( __global__.isocalendar(d)[0], 4 ); },
     // Time zone designator
     O: function (d) { return '+0000'; },
     // Time zone difference
@@ -210,7 +211,7 @@
     // RFC 2822 formatted date
     r: function (d) { return __global__.format( d, 'D, d M Y H:i:s O' ); },
     // Seconds, with leading zeros
-    s: function (d) { return pad( d.getUTCSeconds() ); },
+    s: function (d) { return __global__.pad( d.getUTCSeconds() ); },
     // English ordinal suffix for the day of the month, 2 characters
     S: function (d) {
       var a = d.getUTCDate() % 10, b = d.getUTCDate() % 100;
@@ -223,40 +224,42 @@
     // Time zone abbreviation
     T: function (d) { return 'UTC'; },
     // Microseconds
-    u: function (d, l) { return pad( d.getUTCMilliseconds(), l || 6 ); },
+    u: function (d, l) { return __global__.pad( d.getUTCMilliseconds(), l || 6 ); },
     // Seconds since the Unix Epoch
     U: function (d) { return ~~( d / 1000 ); },
     // Numeric representation of the day of the week
     w: function (d) { return d.getUTCDay(); },
     // ISO-8601 week number of year, weeks starting on Monday 
-    W: function (d) { return pad( __global__.isocalendar(d)[1] ); },
+    W: function (d) { return __global__.pad( __global__.isocalendar(d)[1] ); },
     // A short numeric representation of a year, 2 digits
     y: function (d) { return (d.getUTCFullYear() + '').substr(2); },
     // A full numeric representation of a year, 4 digits
     Y: function (d) { return d.getUTCFullYear(); },
     // The day of the year (starting from 0)
-    z: function (d) { return Math.floor( ( d - (new Date(d.getUTCFullYear(), 0, 1)) ) / DAY_SIZE ); },
+    z: function (d) { return Math.floor( ( d - (new Date(d.getUTCFullYear(), 0, 1)) ) / DAY_SIZE ); }
   };
-
-
-  // **************************************
-  // *** *** *** utility methods *** *** ***
-  // **************************************
-  
-  function pad ( n, l ) {
-    var s = '0000000000' + n;
-    return s.substring( s.length -( l || 2 ) );
-  }
-
 
   // **************************************
   // *** *** *** module methods *** *** ***
   // **************************************
 
+  // zero pad a string n to l places
+  __global__.pad = function ( n, l ) {
+    var s =  __global__.pad.z;
+    if ( !s ) {
+      // This mess is here because JSlint breaks on new Array(999)
+      var a = []; a[999] = '';
+      s = __global__.pad.z = a.join('0');
+    }
+    s += n;
+    return s.substring( s.length -( l || 2 ) );
+  };
+
+
   // is a given year a leap year
   __global__.isLeapYear = function ( y ) {
     if ( y instanceof Date ) { y = y.getUTCFullYear(); }
-    return (( y % 4 == 0 ) && ( y % 100 != 0 )) || ( y % 400 == 0 );
+    return (( y % 4 === 0 ) && ( y % 100 !== 0 )) || ( y % 400 === 0 );
   };
 
 
@@ -281,8 +284,10 @@
   // `mydate.set({ hour: 8, minute: 12, second: 0 });`
   __global__.set = function ( dt, values ) {
     if ( typeof values === 'object' ) {
-      for ( var key in values ) if ( key in method_map ) {
-        dt[ 'setUTC' + method_map[ key ] ]( values[ key ] );
+      for ( var key in values ) {
+        if ( key in method_map ) {
+          dt[ 'setUTC' + method_map[ key ] ]( values[ key ] );
+        }
       }
     }
     return dt;
