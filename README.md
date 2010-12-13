@@ -6,11 +6,21 @@ Currently, the library supports formatting of nearly full spec of PHP style date
 
 ## Dateutil methods
 
+### dateutil.date( [year], [month], [day], [hour], [min], [sec], [ms] )
+
+Function returns a new *Date* instance set to the expected date. If no arguments are given, then it returns the current date. When any arguments are given they are handled in much the same way the native date constructor does, except the first argument is always treated as a year.
+
+It is safe to pass strings as arguments.
+
+**Please note:** Months are zero based in set just as they are in native *Date* construction.
+
+
+
 ### dateutil.isLeapYear( date / year )
 
 Function accepts a *Date*, or a year, and will return true if the year is a leap year or false if not.
 
-    dateutil.isLeapYear( 1468 ) = true
+    dateutil.isLeapYear( 1468 ) == true
 
 
 ### dateutil.daysInMonth( date )
@@ -40,6 +50,28 @@ The function will accept all or any of these keys:
 `year`, `month`, `day`, `hour`, `minute`, `second`, `millisecond`. and their plural forms (`years`, `minutes`, etc. ); and these shorthand variations: `yr` (year), `mn` (month), `day` (day), `hr` (hour), `min` (minute), `sec` (second), `ms` (millisecond).
 
 **Please note:** Months are zero based in set just as they are in native *Date* construction.
+
+This function tries to avoid rollover gotchas that can occur when using native members to set date values. A simplified example of this:
+
+    var d = new Date( 1999, 1, 20 );
+    d.setUTCDate( 30 );   // Tue Mar 02 1999 00:00:00 GMT+0000 (GMT)
+    d.setUTCMonth( 0 );   // Sat Jan 02 1999 00:00:00 GMT+0000 (GMT)
+
+The `dateutil.set` function is takes steps to avoid the problem:
+
+    var d = new Date( 1999, 1, 20 );
+    dateutil.set(d, {
+      'date': 30,
+      'month': 0
+    });  // Sat Jan 30 1999 00:00:00 GMT+0000 (GMT)
+
+    var d = new Date( 1999, 1, 20 );
+    dateutil.set(d, {
+      'month': 0,
+      'date': 30
+    });  // Sat Jan 30 1999 00:00:00 GMT+0000 (GMT)
+
+If you want to be sure you get the correct date then you need to use the `dateutil.date` 
 
 
 ### dateutil.parse( string )
@@ -114,6 +146,11 @@ The `B`, `Z`, and `I` characters have been purposely omitted, and the following 
 
 * `q` &mdash; quarter of the year
 
+The format method tolerates being assigned to the `Date.prototype` object and will work as expected:
+
+    Date.prototype.format = dateutil.format;
+    new Date( 1975, 9, 16 ).format( 'Y-m-d' ) == "1975-10-16"
+
 
 #### Adding a custom formatter
 
@@ -158,4 +195,3 @@ A translation service hook. This function accepts a string and returns it untouc
 
 
 [1]: http://php.net/manual/en/function.date.php
-
