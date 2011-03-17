@@ -135,9 +135,9 @@ An contrived example:
     dateutil.parse('2002_31') == new Date(2002, 6, 30)
 
 
-### dateutil.format( date, format_string )
+### dateutil.format( date, format_string, [language] )
 
-Function accepts a *Date* and a *PHP* style [format string][1] and returns a formatted date. Refer to the [PHP docs][1] for the full spec.
+Function accepts a *Date, a *PHP* style [format string][1], and an optional language identifyer, and will return a formatted date string. Refer to the [PHP docs][1] for the full spec of available format characters.
 
     var mydate = new Date( 2000, 9, 16, 10, 45, 12 );
     dateutil.format( mydate, 'jS F Y' ) == "16th October 2000"
@@ -146,7 +146,10 @@ The `B`, `Z`, and `I` characters have been purposely omitted, and the following 
 
 * `q` &mdash; quarter of the year
 
-The format method tolerates being assigned to the `Date.prototype` object and will work as expected:
+The third optional parameter will get passed through the formatting system until it reaches 
+
+
+The format method is smart about being assigned to the `Date.prototype` object and will work as expected:
 
     Date.prototype.format = dateutil.format;
     new Date( 1975, 9, 16 ).format( 'Y-m-d' ) == "1975-10-16"
@@ -154,14 +157,13 @@ The format method tolerates being assigned to the `Date.prototype` object and wi
 
 #### Adding a custom formatter
 
-You may add your own formatter by assigning them into `dateutil._formats`. A parser is simply a function that takes a *Date* parameter and returns a string. 
+You may add your own formatter by assigning them into `dateutil._formats`. A parser is simply a function that takes a *Date* parameter, a language parameter, and returns a string. 
 
-And example that adds *Swatch internet time* formatter:
-
+An example that adds *Swatch internet time* formatter:
     
     // Swatch Internet time
     dateutil._formats['B'] = function (d) {
-      var mo = 0; // Should really be: isDST * 60 + timeZoneOffsetInMinutes
+      var mo = 0; // This should really be: isDST * 60 + timeZoneOffsetInMinutes
       return Math.round( ( d.getUTCHours() * 3600 + 
             ( ( d.getUTCMinutes() - mo + 60 ) * 60 ) +
               d.getUTCSeconds() ) * 1000 / 86400 ) % 1000;
@@ -170,6 +172,14 @@ And example that adds *Swatch internet time* formatter:
     var mydate = new Date( 1961, 0, 3, 1, 51, 10, 1 );
     dateutil.format( mydate, 'B' ) == '119'
 
+If you call `dateutil._`, or recursively call formatting or other specific formatting functions for delegating work, it is important that you keep passing the second parameter so that a specified language is perserved.
+
+An example that adds upper case 4 letter month name:
+
+    dateutil._formats['R'] = function (d,l) {
+      var mont = this['F']( d, l );  // fetch translated month in "l" language
+      return mont.substr( 0, 4 ).toUpperCase();
+    };
 
 
 ### dateutil.today()
@@ -182,14 +192,31 @@ Function returns a new *Date* instance set to the current day.
 Function returns a new *Date* instance set to the current moment. Uses native implementation if it exists.
 
 
-### dateutil._( string )
+### dateutil._( string, [language] )
 
-A translation service hook. This function accepts a string and returns it untouched. If you want translated month or day names, then overwrite this function with your translation service function, and provide translations for the following strings:
+A string translation function. This function looks for the string argument as a key in `dateutil.lang[ language ]` and uses the the value if it exists, otherwise it falls back on the string argument.
+
+You can feed the system translation strings and use it, or alternatively, if you already have another translation system then you can overwrite this function with your own translation function.
+
+In order to use the built in system you would add translated strings like in this example (Icelandic language):
+
+    dateutil.lang.is = {
+      'January': 'janúar',
+      'February': 'febrúar',
+      'March': 'mars',
+      'April': 'apríl',
+      'May': 'maí',
+      'June': 'júní',
+      // and so on ...
+    };
+
+You should provide translations for the following strings:
 
 * January February March April May June July August September October November December
 * Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec
 * Sunday Monday Tuesday Wednesday Thursday Friday Saturday
 * Sun Mon Tue Wed Thu Fri Sat
+
 
 
 

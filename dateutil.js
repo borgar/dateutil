@@ -17,8 +17,9 @@
   var MONTH_SIZE  = DAY_SIZE * 30.436875; // average month size
   var YEAR_SIZE   = DAY_SIZE * 365.2425;  // average year size
 
-  var month_names = 'January February March April May June July August September October November December'.split(' ');
-  var day_names = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday'.split(' ');
+  var _gl = __global__.lang = { 'en': {} };
+  var _m = 'January February March April May June July August September October November December'.split(' ');
+  var _d = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday'.split(' ');
   
   var method_size = {
      'FullYear': 6, 'Month': 5, 'Date': 4, 'Hours': 3, 
@@ -170,15 +171,15 @@
     // Uppercase Ante meridiem and Post meridiem
     A: function (d) { return d.getUTCHours() >= 12 ? 'PM' : 'AM'; },
     // ISO 8601 date
-    c: function (d) { return __global__.format( d, 'Y-m-d\\TH:i:s.' ) + this.u(d,3) + 'Z'; },
+    c: function (d,l) { return __global__.format( d, 'Y-m-d\\TH:i:s.', l ) + __global__.pad( d.getUTCMilliseconds(), 3 ) + 'Z'; },
     // Day of the month, 2 digits with leading zeros
     d: function (d) { return __global__.pad( d.getUTCDate() ); },
     // A textual representation of a day, three letters
-    D: function (d) { return __global__._( day_names[ d.getUTCDay() ].substr( 0, 3 ) ); },
+    D: function (d,l) { return __global__._( _d[ d.getUTCDay() ].substr( 0, 3 ), l ); },
     // Time zone identifier
     e: function (d) { return 'UTC'; },
     // A full textual representation of a month
-    F: function (d) { return __global__._( month_names[ d.getUTCMonth() ] ); },
+    F: function (d,l) { return __global__._( _m[ d.getUTCMonth() ], l ); },
     // 12-hour format of an hour without leading zeros
     g: function (d) { return d.getUTCHours() % 12 || 12; },
     // 24-hour format of an hour without leading zeros
@@ -192,13 +193,13 @@
     // Day of the month without leading zeros
     j: function (d) { return d.getUTCDate(); },
     // A full textual representation of the day of the week
-    l: function (d) { return __global__._( day_names[ d.getUTCDay() ] ); },
+    l: function (d,l) { return __global__._( _d[ d.getUTCDay() ], l ); },
     // Whether it's a leap year (0 = yes, 1 = no)
     L: function (d) { return __global__.isLeapYear( d ) * 1; },
     // Numeric representation of a month, with leading zeros
     m: function (d) { return __global__.pad( d.getUTCMonth() + 1 ); },
     // A short textual representation of a month, three letters
-    M: function (d) { return __global__._( month_names[ d.getUTCMonth() ].substr( 0, 3 ) ); },
+    M: function (d,l) { return __global__._( _m[ d.getUTCMonth() ].substr( 0, 3 ), l ); },
     // Numeric representation of a month, without leading zeros
     n: function (d) { return d.getUTCMonth() + 1; },
     // ISO-8601 numeric representation of the day of the week
@@ -212,7 +213,7 @@
     // Quarter of the year
     q: function (d) { return ~~( d.getUTCMonth() / 3 ) + 1; },
     // RFC 2822 formatted date
-    r: function (d) { return __global__.format( d, 'D, d M Y H:i:s O' ); },
+    r: function (d,l) { return __global__.format( d, 'D, d M Y H:i:s O', l ); },
     // Seconds, with leading zeros
     s: function (d) { return __global__.pad( d.getUTCSeconds() ); },
     // English ordinal suffix for the day of the month, 2 characters
@@ -227,7 +228,7 @@
     // Time zone abbreviation
     T: function (d) { return 'UTC'; },
     // Microseconds
-    u: function (d, l) { return __global__.pad( d.getUTCMilliseconds(), l || 6 ); },
+    u: function (d) { return __global__.pad( d.getUTCMilliseconds(), 6 ); },
     // Seconds since the Unix Epoch
     U: function (d) { return ~~( d / 1000 ); },
     // Numeric representation of the day of the week
@@ -346,7 +347,7 @@
 
 
   // format a date to string
-  __global__.format = function ( d, fmt ) {
+  __global__.format = function ( d, fmt, lang ) {
     if ( arguments.length === 1 && this instanceof Date ) {
       fmt = d;
       d = this;
@@ -358,7 +359,7 @@
       c = fmt.charAt( i );
       // format characters
       if ( c !== '\\' ) {
-        r.push( (c in date_formatters) ? date_formatters[ c ]( d ) : c );
+        r.push( (c in date_formatters) ? date_formatters[ c ]( d, lang ) : c );
       }
       // escaped characters & unreconized characters
       else {
@@ -385,7 +386,10 @@
 
 
   // translation hook
-  __global__._ = function ( s ) { return s; };
+  __global__._ = function ( s, lang ) {
+    var l = lang && __global__.lang[ lang ];
+    return ( l && s in l ) ? l[s] : s;
+  };
 
 }(
   (typeof module !== 'undefined' && module.exports) 

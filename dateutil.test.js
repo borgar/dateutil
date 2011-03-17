@@ -369,3 +369,28 @@ test("dateutil.now", function () {
 
 });
 
+
+test("dateutil._", function () {
+
+  ok( typeof dateutil._ === 'function', 'dateutil._() is a function' );
+
+  // provide translations for icelandic:
+  dateutil.lang.is = {
+    "January":"janúar", "February":"febrúar", "March":"mars", "April":"apríl", "May":"maí", "June":"júní", "July":"júlí", "August":"ágúst", "September":"september", "October":"október", "November":"nóvember", "December":"desember", 
+    "Sunday":"sunnudagur", "Monday":"mánudagur", "Tuesday":"þriðjudagur", "Wednesday":"miðvikudagur", "Thursday":"fimmtudagur", "Friday":"föstudagur", "Saturday":"laugardagur",
+    "Jan":"jan", "Feb":"feb", "Mar":"mar", "Apr":"apr", "Jun":"jún", "Jul":"júl", "Aug":"ágú", "Sep":"sep", "Oct":"okt", "Nov":"nóv", "Dec":"des",
+    "Sun":"sun", "Mon":"mán", "Tue":"þri", "Wed":"mið", "Thu":"fim", "Fri":"fös", "Sat":"lau"
+  };
+  var d = new Date( Date.UTC( 2006, 7, 10, 15, 5, 8, 123 ) );
+  equals( dateutil.format( d, 'D', 'is' ), 'fim', 'format: D' );
+  equals( dateutil.format( d, 'l', 'is' ), 'fimmtudagur', 'format: l' );
+  equals( dateutil.format( d, 'F', 'is' ), 'ágúst', 'format: F' );
+  equals( dateutil.format( d, 'M', 'is' ), 'ágú', 'format: M' );
+
+  dateutil._ = function () { return 'BORK'; };
+  equals( dateutil.format( d, 'D', 'is' ), 'BORK', 'format: D' );
+  equals( dateutil.format( d, 'l', 'is' ), 'BORK', 'format: l' );
+  equals( dateutil.format( d, 'F', 'is' ), 'BORK', 'format: F' );
+  equals( dateutil.format( d, 'M', 'is' ), 'BORK', 'format: M' );
+
+});
