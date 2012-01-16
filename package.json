@@ -1,0 +1,18 @@
+{
+  "name": "dateutil",
+  "version": "0.1.0",
+  "author": "Borgar Þorsteinsson <borgar@borgar.net> (http://borgar.net/)",
+  "description": "A date parsing and formatting library. Complete ISO 8061 date/time parsing support including quarters and years. Full PHP style date formatting.",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/borgar/dateutil.git"
+  },
+  "main": "./dateutil.js",
+  "engines": {
+    "node": "*"
+  },
+  "tags": [ "date", "time", "format", "PHP", "parse", "ISO 8601" ],
+  "bugs": {
+    "url": "https://github.com/borgar/dateutil/issues"
+  }
+}
