@@ -5,6 +5,20 @@ test('dateutil', function () {
 });
 
 
+test('dateutil.date', function () {
+
+  ok( typeof dateutil.date === 'function', 'have date factory' );
+  ok( dateutil.date() instanceof Date, 'date (now) returns date' );
+  ok( dateutil.date(2000) instanceof Date, 'date (year) returns date' );
+  ok( dateutil.date(2000,16,10) instanceof Date, 'date (y,m,d) returns date' );
+
+  same( +dateutil.date(0), +new Date(1970,0,1), 'date (0) is 0 timestamp' );
+  same( +dateutil.date(182649600000), +new Date(182649600000), 'date (ts) is set by timestamp' );
+  same( +dateutil.date(1975,9,16), +new Date(182649600000), 'date (y,m,d) is set correctly' );
+
+});
+
+
 test("dateutil.isLeapYear", function () {
 
   // expect( 10 );
@@ -61,6 +75,21 @@ test("dateutil.daysInMonth", function () {
 });
 
 
+test('dateutil.isoyear', function () {
+
+  same( dateutil.isoyear(new Date(Date.UTC(2005, 0, 1))), "2005", "2005" );
+  same( dateutil.isoyear(new Date(-62009366400000)), "0005", "0005" );
+  same( dateutil.isoyear(new Date(-62167219200000)), "0000", "0000" );
+  same( dateutil.isoyear(new Date(-62198755200000)), "-000001", "-1" );
+  same( dateutil.isoyear(new Date(-77945673600000)), "-000500", "-500" );
+  same( dateutil.isoyear(new Date(253402300800000)), "+010000", "10000" );
+  same( dateutil.isoyear(new Date(3093527980800000)), "+100000", "100000" );
+  same( dateutil.isoyear(new Date(253370764800000)), "9999", "9999" );
+  same( dateutil.isoyear(new Date(3093496444800000)), "+099999", "99999" );
+
+});
+
+
 test('dateutil.isocalendar', function () {
 
   same( dateutil.isocalendar(new Date(Date.UTC(2005, 0, 1))), [2004,53,6], "2004-W53-6" );
@@ -86,6 +115,7 @@ test('dateutil.isocalendar', function () {
   same( dateutil.isocalendar(new Date(Date.UTC(2009, 0, 1))), [2009, 1,4], "2009-W01-4" );
   
 });
+
 
 test("dateutil.set", function () {
 
@@ -173,6 +203,16 @@ test('dateutil.parse', function(){
   same( +dateutil.parse('2011-11-11T11:11+00'), +corduroy_min, "2011-11-11T11:11+00" );
   same( +dateutil.parse('2011-11-11T11.111+00'), +corduroy_hfrc, "2011-11-11T11.111+00" );
   same( +dateutil.parse('2011-11-11T11+00'), +corduroy_hour, "2011-11-11T11+00" );
+
+  // extended year
+  same( +dateutil.parse('0005-01-01T00:00:00.000Z'), +new Date(-62009366400000), '0005-01-01T00:00:00.000Z' );
+  same( +dateutil.parse('0000-01-01T00:00:00.000Z'), +new Date(-62167219200000), '0000-01-01T00:00:00.000Z' );
+  same( +dateutil.parse('-000001-01-01T00:00:00.000Z'), +new Date(-62198755200000), '-000001-01-01T00:00:00.000Z' );
+  same( +dateutil.parse('-000500-01-01T00:00:00.000Z'), +new Date(-77945673600000), '-000500-01-01T00:00:00.000Z' );
+  same( +dateutil.parse('+010000-01-01T00:00:00.000Z'), +new Date(253402300800000), '+010000-01-01T00:00:00.000Z' );
+  same( +dateutil.parse('+100000-01-01T00:00:00.000Z'), +new Date(3093527980800000), '+100000-01-01T00:00:00.000Z' );
+  same( +dateutil.parse('9999-01-01T00:00:00.000Z'), +new Date(253370764800000), '9999-01-01T00:00:00.000Z' );
+  same( +dateutil.parse('+099999-01-01T00:00:00.000Z'), +new Date(3093496444800000), '+099999-01-01T00:00:00.000Z' );
 
   // date
   same( +dateutil.parse('2011-11-11'), +corduroy_day, "2011-11-11" );
@@ -336,6 +376,15 @@ test("dateutil.format", function () {
   equals( dateutil.format( d, 'r'), 'Tue, 03 Jan 1961 01:51:10 +0000', 'format: r' );
   equals( dateutil.format( d, 'U'), '-283817329', 'format: U' );
 
+  equals( dateutil.format( new Date(-62009366400000), 'c'), '0005-01-01T00:00:00.000Z', 'format: c' );
+  equals( dateutil.format( new Date(-62167219200000), 'c'), '0000-01-01T00:00:00.000Z', 'format: c' );
+  equals( dateutil.format( new Date(-62198755200000), 'c'), '-000001-01-01T00:00:00.000Z', 'format: c' );
+  equals( dateutil.format( new Date(-77945673600000), 'c'), '-000500-01-01T00:00:00.000Z', 'format: c' );
+  equals( dateutil.format( new Date(253402300800000), 'c'), '+010000-01-01T00:00:00.000Z', 'format: c' );
+  equals( dateutil.format( new Date(3093527980800000), 'c'), '+100000-01-01T00:00:00.000Z', 'format: c' );
+  equals( dateutil.format( new Date(253370764800000), 'c'), '9999-01-01T00:00:00.000Z', 'format: c' );
+  equals( dateutil.format( new Date(3093496444800000), 'c'), '+099999-01-01T00:00:00.000Z', 'format: c' );
+
   // allow transfering to prototype
   Date.prototype.format = dateutil.format;
   var d = new Date( Date.UTC(1975, 9, 16) );
@@ -365,6 +414,7 @@ test("dateutil.now", function () {
 
   // expect( 10 );
   ok( typeof dateutil.now === 'function', 'dateutil.now() is a function' );
+  ok( typeof now === "number", 'dateutil.now() returns a number, not a date' );
   same( +d, +now, 'dateutil.now()' );
 
 });

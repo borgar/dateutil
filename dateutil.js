@@ -60,7 +60,7 @@
     // -- currently doesn't really support fractions on anything other than seconds >> FIXME
     // -- does not support timezones other than Zulu
     date_and_time: {
-      test: /^[+\-]?\d{4,6}(?:(?:\-\d\d){1,2}|\d{4})[T ](?:\d\d)(?::?\d\d){0,2}(?:[\.,]\d+)?(?:Z|[+\-]\d\d(:?\d\d)?)?$/,
+      test: /^(?:[+\-]\d{6}|\d{4})(?:(?:\-\d\d){1,2}|\d{4})[T ](?:\d\d)(?::?\d\d){0,2}(?:[\.,]\d+)?(?:Z|[+\-]\d\d(:?\d\d)?)?$/,
       size: 1,
       parse: function ( str ) {
         var b = str.split( /[T ]/ );
@@ -85,15 +85,11 @@
   
     // year + month + day
     date: {
-      test: /^[+\-]?\d{4,6}(?:\-\d\d\-\d\d|-?\d\d\d\d)$/,
+      test: /^(?:[+\-]\d{6}|\d{4})(?:\-\d\d\-\d\d|\-?\d\d\d\d)$/,
       size: DAY_SIZE,
       parse: function ( str ) {
-        var s = str.replace( /\D/g, '' ),
-            d = __global__.date(
-              s.substring( 0, s.length -4 ),
-             +s.substr( s.length -4, 2 ) - 1,
-              s.substr( s.length -2 )
-            );
+        var m = /^([+\-]\d{6}|\d{4})\-?(\d\d)\-?(\d\d)$/.exec( str ),
+            d = __global__.date( m[1], +m[2] -1, m[3] );
         d.size = DAY_SIZE;
         return d;
       }
@@ -172,7 +168,9 @@
     // Uppercase Ante meridiem and Post meridiem
     A: function (d) { return d.getUTCHours() >= 12 ? 'PM' : 'AM'; },
     // ISO 8601 date
-    c: function (d,l) { return __global__.format( d, 'Y-m-d\\TH:i:s.', l ) + __global__.pad( d.getUTCMilliseconds(), 3 ) + 'Z'; },
+    c: function (d,l) { return __global__.isoyear( d ) +
+                               __global__.format( d, '-m-d\\TH:i:s.', l ) +
+                               __global__.pad( d.getUTCMilliseconds(), 3 ) + 'Z'; },
     // Day of the month, 2 digits with leading zeros
     d: function (d) { return __global__.pad( d.getUTCDate() ); },
     // A textual representation of a day, three letters
@@ -249,11 +247,17 @@
   // **************************************
 
   __global__.date = function ( y, m, d, h, n, s, ms ) {
-    var ts = ( !arguments.length ) ? __global__.now() 
-        : Date.UTC( parseInt( y||0, 10 ), parseInt( m||0, 10 ), parseInt( d||1, 10 ),
-                    parseInt( h||0, 10 ), parseInt( n||0, 10 ), parseInt( s||0, 10 ),
-                    parseInt( ms||0, 10 ) );
-      return new Date( ts );
+    if ( !arguments.length ) { return new Date(__global__.now()); }
+    y = parseInt( y || 0, 10 );
+    if ( arguments.length === 1 ) { return new Date(y); }
+    var ts = Date.UTC( y, parseInt( m||0, 10 ), parseInt( d||1, 10 ),
+              parseInt( h||0, 10 ), parseInt( n||0, 10 ), parseInt( s||0, 10 ),
+              parseInt( ms||0, 10 ) );
+    var d = new Date( ts );
+    if ( y < 100 && y >= 0 ) { // JS date ranges 0-99 are interpreted by Date.UTC as 1900-1999
+      d.setUTCFullYear( y );
+    }
+    return d;
   };
 
 
@@ -294,6 +298,15 @@
     var w = Math.floor( (t.getTime() - __global__.date(iso_year, 0, 1, -6)) / 86400000 );
     return [ iso_year, 1+Math.floor(w/7), d||7 ];
   };
+
+
+  __global__.isoyear = function ( dt ) {
+    var y = dt.getUTCFullYear();
+    if ( y >= 0 && y <= 9999 ) {
+      return __global__.pad( Math.abs(y), 4 );
+    }
+    return ( (y<0) ? '-' : '+' ) + __global__.pad( Math.abs(y), 6 );
+  }
 
 
   // Allow setting multiple properties at once using object notation:
