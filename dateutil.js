@@ -17,10 +17,11 @@
   var MONTH_SIZE  = DAY_SIZE * 30.436875; // average month size
   var YEAR_SIZE   = DAY_SIZE * 365.2425;  // average year size
 
+  var _toString = Object.prototype.toString;
   var _gl = __global__.lang = { 'en': {} };
   var _m = 'January February March April May June July August September October November December'.split(' ');
   var _d = 'Sunday Monday Tuesday Wednesday Thursday Friday Saturday'.split(' ');
-  
+
   var method_size = {
      'FullYear': 6, 'Month': 5, 'Date': 4, 'Hours': 3, 
      'Minutes': 2, 'Seconds': 1, 'Milliseconds': 0
@@ -269,7 +270,7 @@
 
   // is a given year a leap year
   __global__.isLeapYear = function ( y ) {
-    if ( y instanceof Date ) { y = y.getUTCFullYear(); }
+    if ( _toString.call( y ) === '[object Date]' ) { y = y.getUTCFullYear(); }
     return (( y % 4 === 0 ) && ( y % 100 !== 0 )) || ( y % 400 === 0 );
   };
 
@@ -348,13 +349,17 @@
 
   // format a date to string
   __global__.format = function ( d, fmt, lang ) {
-    if ( arguments.length === 1 && this instanceof Date ) {
+
+    // has been moved to the Date prototype?
+    if ( _toString.call( this ) === '[object Date]' ) {
+      lang = fmt;
       fmt = d;
       d = this;
     }
-    else if ( !(d instanceof Date) ) {
-      throw new Error('No date passed to format.');
+    else if ( _toString.call( d ) !== '[object Date]' ) {
+      throw new Error( 'No date passed to format.' );
     }
+
     for ( var r=[], c, l=fmt.length, i=0; i<l; i++ ) {
       c = fmt.charAt( i );
       // format characters
