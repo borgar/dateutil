@@ -36,7 +36,7 @@ var sandbox = {
     current_test.results.push([ !!value, message ]);
   },
   
-  equals: function ( rest, exp, msg ) {
+  equal: function ( rest, exp, msg ) {
     try {
       assert.equal(rest, exp);
     }
@@ -47,7 +47,7 @@ var sandbox = {
     current_test.results.push([ true, msg ]);
   },
 
-  same: function ( rest, exp, msg ) {
+  deepEqual: function ( rest, exp, msg ) {
     try {
       assert.deepEqual(rest, exp);
     }
