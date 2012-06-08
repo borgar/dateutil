@@ -12,6 +12,8 @@ test('dateutil.date', function () {
   ok( dateutil.date(2000) instanceof Date, 'date (year) returns date' );
   ok( dateutil.date(2000,16,10) instanceof Date, 'date (y,m,d) returns date' );
 
+  ok( +dateutil.date(10,0,1) == -61851600000000, 'two digit years are not "corrected"' );
+
   deepEqual( +dateutil.date(0), +new Date(1970,0,1), 'date (0) is 0 timestamp' );
   deepEqual( +dateutil.date(182649600000), +new Date(182649600000), 'date (ts) is set by timestamp' );
   deepEqual( +dateutil.date(1975,9,16), +new Date(182649600000), 'date (y,m,d) is set correctly' );
