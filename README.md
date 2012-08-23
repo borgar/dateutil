@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/borgar/dateutil.png)](http://travis-ci.org/borgar/dateutil)
 # Dateutil
 
 Dateutil is a modest collection of utility methods for manipulating dates. It works both in Node.JS and in browsers. It's goal is to provide extendable mechanisms for parsing and formatting dates, as well as other convenient date methods.
