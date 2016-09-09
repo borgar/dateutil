@@ -1,6 +1,6 @@
 # Dateutil
 
-Dateutil is a modest collection of utility methods for manipulating dates. It works both in Node.JS ([npm][npm]) and in browsers. It's goal is to provide extendable mechanisms for parsing and formatting dates, as well as other convenient date methods.
+Dateutil is a modest collection of utility methods for manipulating dates. It works both in Node.JS ([npm][npm]) and in browsers. Its goal is to provide extendable mechanisms for parsing and formatting dates, as well as other convenient date methods.
 
 Currently, the library supports formatting of nearly full spec of PHP style dates (minus the really useless bits), and parses about the full range of ISO 8901 formats. It supports translations (for formatter) but no timezones.
 
